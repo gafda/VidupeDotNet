@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-.NET%2010%2B-purple.svg)
 ![Status](https://img.shields.io/badge/status-Active-success.svg)
-![Version](https://img.shields.io/badge/version-1.5.0-informational.svg)
+![Version](https://img.shields.io/badge/version-1.5.1-informational.svg)
 [![Docker Hub](https://img.shields.io/docker/pulls/gafda/vidupe-net.svg)](https://hub.docker.com/r/gafda/vidupe-net)
 
 **VidupeDotNet** is a modern, high-performance video deduplication utility built on .NET 10 and Blazor Server. It identifies duplicate or near-duplicate video files using 7 comparison algorithms — CLIP, LPIPS, SSIM, pHash, dHash, Histogram, and MSE — with optional GPU acceleration.
@@ -64,8 +64,8 @@ Then open your browser at `http://localhost:8080`.
 | Tag | Architecture | Description |
 |-----|-------------|-------------|
 | `latest` | x64 | Latest stable release |
-| `1.5.0` | x64 | Specific version |
-| `1.5.0-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
+| `1.5.1` | x64 | Specific version |
+| `1.5.1-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
 
 ---
 
@@ -211,7 +211,7 @@ docker run -d \
   -p 8080:8080 \
   -v /path/to/your/videos:/videos:ro \
   -v vidupe-data:/data \
-  gafda/vidupe-net:1.5.0-arm64
+  gafda/vidupe-net:1.5.1-arm64
 ```
 
 > Note: Neural-network algorithms (CLIP, LPIPS) will run on CPU on ARM64 as ONNX CUDA is not supported on this architecture.
