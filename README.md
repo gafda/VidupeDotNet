@@ -3,8 +3,10 @@
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-.NET%2010%2B-purple.svg)
 ![Status](https://img.shields.io/badge/status-Active-success.svg)
-![Version](https://img.shields.io/badge/version-1.5.1-informational.svg)
+![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)
 [![Docker Hub](https://img.shields.io/docker/pulls/gafda/vidupe-net.svg)](https://hub.docker.com/r/gafda/vidupe-net)
+
+![main](./docs/images/main.png)
 
 **VidupeDotNet** is a modern, high-performance video deduplication utility built on .NET 10 and Blazor Server. It identifies duplicate or near-duplicate video files using 7 comparison algorithms — CLIP, LPIPS, SSIM, pHash, dHash, Histogram, and MSE — with optional GPU acceleration.
 
@@ -17,10 +19,17 @@
 - **7 Comparison Algorithms:** CLIP (semantic), LPIPS (deep perceptual), SSIM, pHash, dHash, Histogram, MSE — ordered by accuracy. Custom mode combines any algorithms. GPU-recommended warning for neural-network algorithms.
 - **GPU Acceleration:** Optional CUDA/OpenCL acceleration with automatic CPU fallback.
 - **Selective Folder Scanning:** Catalog all folders but scan/compare only those you check. Uncheck folders to exclude them without removing them.
+- **Collapsible Folder Tree:** Folder paths are presented as a path-compressed tree with tri-state parent checkboxes, tree connector lines, and aggregate video counts.
 - **Dark & Light Themes:** Toggle between dark and light modes with persistent preference.
 - **High Performance:** Multi-core async processing for fast scanning of large libraries.
 - **Deep Scanning:** Configurable frame capture positions (1×1 through 4×4 grids, cut-ends mode, others) for thorough visual comparison.
 - **Mirrored Video Detection:** Detects horizontally flipped duplicates (e.g. front-camera recordings).
+- **Video Summary Pre-filter:** Optional majority-vote pHash per video for O(1) pair rejection, reducing comparison time and RAM for large collections.
+- **Lossless WebP Thumbnails:** Captured frames are stored as lossless WebP for 100% faithful pixel reproduction.
+- **Retry Failed Scans:** One-click retry for all files that failed during scanning.
+- **Re-compare Warnings:** Alerts when comparison data may be stale after a new scan, with optional suppression.
+- **Pair Estimate:** Live estimate of comparison pair count and thumbnail size in the sidebar.
+- **Incomplete Thumbnail Rescan:** Videos with missing captures are automatically re-scanned.
 - **Persistent State:** Scan data, ignored pairs, and failed scan history are preserved across sessions.
 - **Docker Ready:** Pre-built images for both x64 and ARM64 (Raspberry Pi 4/5) with optional GPU passthrough.
 - **Connection Resilience:** Automatic reconnection with user notification when the server disconnects.
@@ -64,8 +73,8 @@ Then open your browser at `http://localhost:8080`.
 | Tag | Architecture | Description |
 |-----|-------------|-------------|
 | `latest` | x64 | Latest stable release |
-| `1.5.1` | x64 | Specific version |
-| `1.5.1-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
+| `1.7.0` | x64 | Specific version |
+| `1.7.0-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
 
 ---
 
@@ -211,7 +220,7 @@ docker run -d \
   -p 8080:8080 \
   -v /path/to/your/videos:/videos:ro \
   -v vidupe-data:/data \
-  gafda/vidupe-net:1.5.1-arm64
+  gafda/vidupe-net:1.7.0-arm64
 ```
 
 > Note: Neural-network algorithms (CLIP, LPIPS) will run on CPU on ARM64 as ONNX CUDA is not supported on this architecture.
