@@ -73,6 +73,7 @@ Then open your browser at `http://localhost:8080`.
 | Tag | Architecture | Description |
 |-----|-------------|-------------|
 | `latest` | x64 | Latest stable release |
+| `latest-arm64` | ARM64 | Latest stable release for ARM64 devices |
 | `1.7.0` | x64 | Specific version |
 | `1.7.0-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
 
