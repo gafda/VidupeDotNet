@@ -3,20 +3,22 @@
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-.NET%2010%2B-purple.svg)
 ![Status](https://img.shields.io/badge/status-Active-success.svg)
-![Version](https://img.shields.io/badge/version-1.7.0-informational.svg)
+![Version](https://img.shields.io/badge/version-1.8.0-informational.svg)
 [![Docker Hub](https://img.shields.io/docker/pulls/gafda/vidupe-net.svg)](https://hub.docker.com/r/gafda/vidupe-net)
-
-![main](./docs/images/main.png)
 
 **VidupeDotNet** is a modern, high-performance video deduplication utility built on .NET 10 and Blazor Server. It identifies duplicate or near-duplicate video files using 7 comparison algorithms — CLIP, LPIPS, SSIM, pHash, dHash, Histogram, and MSE — with optional GPU acceleration.
 
+![main](./docs/images/main.png)
+
 > 📦 **Docker image available on Docker Hub:** [hub.docker.com/r/gafda/vidupe-net](https://hub.docker.com/r/gafda/vidupe-net)
+>
+> 📖 **New to VidupeDotNet?** See the [Quick Start Guide](./docs/QUICKSTART.md) for a step-by-step walkthrough with screenshots.
 
 ---
 
 ## Features
 
-- **7 Comparison Algorithms:** CLIP (semantic), LPIPS (deep perceptual), SSIM, pHash, dHash, Histogram, MSE — ordered by accuracy. Custom mode combines any algorithms. GPU-recommended warning for neural-network algorithms.
+- **7 Comparison Algorithms:** CLIP, LPIPS, SSIM, pHash, dHash, Histogram, MSE — ordered by accuracy. Custom mode combines any algorithms.
 - **GPU Acceleration:** Optional CUDA/OpenCL acceleration with automatic CPU fallback.
 - **Selective Folder Scanning:** Catalog all folders but scan/compare only those you check. Uncheck folders to exclude them without removing them.
 - **Collapsible Folder Tree:** Folder paths are presented as a path-compressed tree with tri-state parent checkboxes, tree connector lines, and aggregate video counts.
@@ -24,7 +26,8 @@
 - **High Performance:** Multi-core async processing for fast scanning of large libraries.
 - **Deep Scanning:** Configurable frame capture positions (1×1 through 4×4 grids, cut-ends mode, others) for thorough visual comparison.
 - **Mirrored Video Detection:** Detects horizontally flipped duplicates (e.g. front-camera recordings).
-- **Video Summary Pre-filter:** Optional majority-vote pHash per video for O(1) pair rejection, reducing comparison time and RAM for large collections.
+- **Video Summary Pre-filter:** Optional per-video pHash summary for fast pair rejection, reducing comparison time and RAM for large collections.
+- **pHash Pre-filter:** Optional per-position pHash pre-filter with configurable threshold rejects dissimilar pairs before the selected algorithm runs, trading thoroughness for speed.
 - **Lossless WebP Thumbnails:** Captured frames are stored as lossless WebP for 100% faithful pixel reproduction.
 - **Retry Failed Scans:** One-click retry for all files that failed during scanning.
 - **Re-compare Warnings:** Alerts when comparison data may be stale after a new scan, with optional suppression.
@@ -45,7 +48,7 @@ The recommended way to run VidupeDotNet is via the pre-built Docker image on [Do
 - [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation)
 - FFmpeg is bundled in the image — no separate installation needed
 - Optional: NVIDIA GPU + drivers on the host for GPU-accelerated algorithms (pHash, SSIM)
-- Optional: CUDA Toolkit 12.x + cuDNN 9.x on the host for neural-network GPU acceleration (CLIP, LPIPS) — see [GPU Setup](#gpu-setup)
+- Optional: CUDA Toolkit 12.x + cuDNN 9.x on the host for GPU acceleration of CLIP and LPIPS — see [GPU Setup](#gpu-setup)
 
 ### Quick Start
 
@@ -72,10 +75,10 @@ Then open your browser at `http://localhost:8080`.
 
 | Tag | Architecture | Description |
 |-----|-------------|-------------|
-| `latest` | x64 | Latest stable release |
-| `latest-arm64` | ARM64 | Latest stable release for ARM64 devices |
-| `1.7.0` | x64 | Specific version |
-| `1.7.0-arm64` | ARM64 | Raspberry Pi 4/5 and other ARM64 devices |
+| `latest` | amd64 + arm64 | Latest stable release |
+| `1.8.0` | amd64 + arm64 | Specific version |
+
+Both tags are multi-arch manifest lists — Docker and Podman automatically pull the correct image for your host architecture.
 
 ---
 
@@ -111,7 +114,7 @@ VidupeDotNet has two independent GPU acceleration paths. Both are optional — t
 | **CUDA/OpenCL** | pHash, SSIM | NVIDIA/AMD GPU + drivers |
 | **ONNX CUDA** | CLIP, LPIPS | NVIDIA GPU + CUDA Toolkit 12.x + cuDNN 9.x |
 
-The NVIDIA driver alone is **not sufficient** for ONNX CUDA acceleration. You must also install the CUDA Toolkit libraries on the **host machine**:
+The NVIDIA driver alone is **not sufficient** for CLIP and LPIPS GPU acceleration. You must also install the CUDA Toolkit libraries on the **host machine**:
 
 ```bash
 # Fedora / RHEL / Bazzite
@@ -121,7 +124,7 @@ sudo dnf install cuda-cudart-12-6 libcublas-12-6 libcufft-12-6 libcurand-12-6 li
 sudo apt install cuda-toolkit-12-6 libcudnn9-cuda-12
 ```
 
-If CUDA libraries are missing, CLIP and LPIPS will fall back to CPU automatically with a warning in the logs.
+If CUDA libraries are missing, CLIP and LPIPS fall back to CPU automatically with a warning in the logs.
 
 ---
 
@@ -221,10 +224,10 @@ docker run -d \
   -p 8080:8080 \
   -v /path/to/your/videos:/videos:ro \
   -v vidupe-data:/data \
-  gafda/vidupe-net:1.7.0-arm64
+  gafda/vidupe-net:1.8.0
 ```
 
-> Note: Neural-network algorithms (CLIP, LPIPS) will run on CPU on ARM64 as ONNX CUDA is not supported on this architecture.
+> Note: CLIP and LPIPS run on CPU on ARM64 as ONNX CUDA is not supported on this architecture.
 
 ---
 
